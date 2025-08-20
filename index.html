@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 编码字符集 -->
+    <meta name="generator" content="editplus@" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="作者" />
+    <meta name="keywords" content="关键字" />
+    <meta name="description" content="描述" />
+    <title>小刘作图器</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./bitbug_favicon.ico" />
+    <style>
+      body,
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+      ul {
+        list-style-type: none;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 50px;
+        box-sizing: border-box;
+        border-bottom: 1px solid;
+        padding-bottom: 1px;
+      }
+      li {
+        padding: 4px 6px;
+        border: 1px solid;
+        border-radius: 3px;
+      }
+      canvas {
+        width: 100%;
+        height: calc(100vh - 54px);
+      }
+      li.active {
+        box-shadow: 0px 0px 10px blue;
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li class="active">直线</li>
+      <li>方框</li>
+      <li>圆形</li>
+      <li>橡皮</li>
+      <li>
+        下载
+        <!-- download属性,实现打开base64地址 -->
+        <a href="" download="小刘作图器"></a>
+      </li>
+      <li>细线</li>
+      <li>普通</li>
+      <li>粗线</li>
+      <li><input type="color" /></li>
+    </ul>
+    <canvas></canvas>
+    <script src="./index.js"></script>
+    <script>
+      let canvas = document.querySelector('canvas')
+      //一定要给canvas的width属性和height设置值
+      canvas.width = canvas.offsetWidth
+      canvas.height = canvas.offsetHeight
+      let ctx = canvas.getContext('2d')
+      let huaban = new Huaban()
+      //实现按钮的转换
+      let ul = document.querySelector('ul')
+      ul.addEventListener('click', function (e) {
+        ;[].slice.call(ul.children).forEach(ele => {
+          ele.classList.remove('active')
+        })
+        e.target.classList.add('active')
+        if (e.target.innerText === '直线') {
+          huaban.line()
+        } else if (e.target.innerText === '方框') {
+          huaban.rect()
+        } else if (e.target.innerText === '圆形') {
+          huaban.arc()
+        } else if (e.target.innerText === '橡皮') {
+          huaban.rubber()
+        } else if (e.target.innerText === '细线') {
+          huaban.xiline()
+        } else if (e.target.innerText === '普通') {
+          huaban.normalline()
+        } else if (e.target.innerText === '粗线') {
+          huaban.culine()
+        } else if (e.target.nodeName === 'INPUT') {
+          e.target.addEventListener('change', function () {
+            huaban.setColor(e.target.value)
+          })
+        } else if (e.target.innerText === '下载') {
+          const aDom = e.target.querySelector('a')
+          aDom.href = canvas.toDataURL()
+          //自动触发点击事件
+          aDom.click()
+        }
+      })
+    </script>
+  </body>
+</html>
